@@ -4,6 +4,8 @@ panda_mujoco_gym_og, the original, and panda_mujoco_gym, which is modified for t
 will remain separate. However, if we actually end up using this, we will merge them into one package, with torque 
 control being an extra feature.
 
+I have also added an example [training script](scripts/main.py). It doesn't seem to work very well :/
+
 Original README:
 
 # Open-Source Reinforcement Learning Environments Implemented in MuJoCo with Franka Manipulator

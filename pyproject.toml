@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=75.8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "panda-mujoco-gym-og"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "mujoco==2.3.3",
+    "gymnasium==0.29.1",
+    "gymnasium-robotics==1.2.2",
+    "stable-baselines3==2.2.1",
+    "tensorboard>=2.19.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["panda_mujoco_gym_og*"]
+
+[tool.setuptools.package-data]
+"panda_mujoco_gym_og" = ["assets/**/*"]

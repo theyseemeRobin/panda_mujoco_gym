@@ -38,8 +38,11 @@ class FrankaEnv(MujocoRobotEnv):
         self.block_gripper = block_gripper
         self.model_path = model_path
 
-        action_size = 7 if block_gripper else 9
+        action_size = 3
+        action_size += 0 if self.block_gripper else 1
+
         self.reward_type = reward_type
+
         self.neutral_joint_values = np.array([0.00, 0.41, 0.00, -1.85, 0.00, 2.26, 0.79, 0.00, 0.00])
 
         super().__init__(
@@ -148,11 +151,26 @@ class FrankaEnv(MujocoRobotEnv):
 
     def _set_action(self, action) -> None:
         action = action.copy()
-        n_actions = action.shape[0]
-        # denormalize action torques from -1,1 to the range of the actuator
-        limits = self.model.actuator_forcerange[:, :len(action)]
-        denormalized_action = (action + 1) / 2 * (limits[:, 1][:n_actions] - limits[:, 0][:n_actions]) + limits[:, 0][:n_actions]
-        self.data.ctrl[:len(denormalized_action)] = denormalized_action
+        # for the pick and place task
+        if not self.block_gripper:
+            pos_ctrl, gripper_ctrl = action[:3], action[3]
+            fingers_ctrl = gripper_ctrl * 0.2
+            fingers_width = self.get_fingers_width().copy() + fingers_ctrl
+            fingers_half_width = np.clip(fingers_width / 2, self.ctrl_range[-1, 0], self.ctrl_range[-1, 1])
+
+        elif self.block_gripper:
+            pos_ctrl = action
+            fingers_half_width = 0
+
+        # control the gripper
+        self.data.ctrl[-2:] = fingers_half_width
+
+        # control the end-effector with mocap body
+        pos_ctrl *= 0.05
+        pos_ctrl += self.get_ee_position().copy()
+        pos_ctrl[2] = np.max((0, pos_ctrl[2]))
+
+        self.set_mocap_pose(pos_ctrl, self.grasp_site_pose)
 
     def _get_obs(self) -> dict:
         # robot

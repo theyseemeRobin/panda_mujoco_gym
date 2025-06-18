@@ -13,7 +13,7 @@ import panda_mujoco_gym
 N_STEPS = 1000000
 log_dir = "./logs/"
 os.makedirs(log_dir, exist_ok=True)
-env = gym.make("FrankaPushDense-v0", render_mode="human")
+env = gym.make("FrankaReachSparse-v0",  render_mode="human")
 env = Monitor(env, filename=os.path.join(log_dir, "monitor.csv"))
 model = SAC(policy="MultiInputPolicy", env=env, verbose=1, tensorboard_log=log_dir)
 

@@ -303,3 +303,15 @@ class FrankaEnv(MujocoRobotEnv):
         finger1 = self._utils.get_joint_qpos(self.model, self.data, "finger_joint1")
         finger2 = self._utils.get_joint_qpos(self.model, self.data, "finger_joint2")
         return finger1 + finger2
+
+    def get_joint_angles(self) -> np.ndarray:
+        joint_angles = np.zeros(9)
+        for i, joint_name in enumerate(self.arm_joint_names + self.gripper_joint_names):
+            joint_angles[i] = self._utils.get_joint_qpos(self.model, self.data, joint_name)
+        return joint_angles
+
+    def get_joint_velocities(self) -> np.ndarray:
+        joint_angles = np.zeros(9)
+        for i, joint_name in enumerate(self.arm_joint_names + self.gripper_joint_names):
+            joint_angles[i] = self._utils.get_joint_qvel(self.model, self.data, joint_name)
+        return joint_angles

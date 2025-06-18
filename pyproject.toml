@@ -19,7 +19,7 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["panda_mujoco_gym_og*"]
+include = ["panda_mujoco_gym*"]
 
 [tool.setuptools.package-data]
 "panda_mujoco_gym_og" = ["assets/**/*"]
